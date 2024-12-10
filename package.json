@@ -1,0 +1,27 @@
+{
+  "name": "stockgest",
+  "version": "1.0.0",
+  "description": "Projecto de gestão de stock para casas",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/filipecamarata/stockgest.git"
+  },
+  "author": "Filipe Camarata",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/filipecamarata/stockgest/issues"
+  },
+  "homepage": "https://github.com/filipecamarata/stockgest#readme",
+  "dependencies": {
+    "express": "^4.21.2",
+    "express-handlebars": "^8.0.1",
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}
