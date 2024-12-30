@@ -6,10 +6,10 @@
     <div class="products">
         {{#each products}}
             <div class="contents">
-                <h2>{{this.name}}</h2>
+                <h2>{{this.product}}</h2>
                 <p> Quantidade disponível: {{this.amount}}</p>
-                <p>categoria: {{this.category_id}}</p>
-                <p>Actualizado ultima vez em {{this.updated_at}} por {{this.user_id}}</p>
+                <p>categoria: {{this.category}}</p>
+                <p>Actualizado ultima vez em {{this.updated_at}} por {{this.user}}</p>
             </div>
 
         {{/each}}

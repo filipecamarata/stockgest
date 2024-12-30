@@ -66,7 +66,7 @@ app.post('/save-product', (req, res) =>{
 
 //Rota para acessar os produtos
 app.get('/products', (req, res) =>{
-    const sqlQuery = `SELECT u.name, p.name,  c.name , p.amount, p.updated_at FROM products AS p join category AS c
+    const sqlQuery = `SELECT u.name user, p.name product,  c.name category , p.amount, p.updated_at FROM products AS p join category AS c
     on c.id = p.category_id join user AS u on p.user_id = u.id`
     
     conexao.query(sqlQuery, (err, data) =>{
