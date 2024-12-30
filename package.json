@@ -4,7 +4,8 @@
   "description": "Projecto de gestão de stock para casas",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ./index  localhost:3000"
   },
   "repository": {
     "type": "git",
