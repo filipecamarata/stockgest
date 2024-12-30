@@ -25,6 +25,8 @@ app.use(express.static('public'))
 
 //Rotas do projecto
 
+
+//Rota para cadastro de produto
 app.get('/add', (req, res) =>{
     const sqlQuery = `SELECT id FROM user WHERE email = 'filipeedvandro942@gmail.com'`
     conexao.query(sqlQuery, (err, data)=>{
@@ -40,6 +42,7 @@ app.get('/add', (req, res) =>{
     
 })
 
+//Rota para salvar os dados do produto na bd
 app.post('/save-product', (req, res) =>{
     const user_id = req.body.id
     const nome = req.body.name
@@ -58,6 +61,25 @@ app.post('/save-product', (req, res) =>{
         res.redirect('/add')
     })
 
+})
+
+
+//Rota para acessar os produtos
+app.get('/products', (req, res) =>{
+    const sqlQuery = `SELECT u.name, p.name,  c.name , p.amount, p.updated_at FROM products AS p join category AS c
+    on c.id = p.category_id join user AS u on p.user_id = u.id`
+    
+    conexao.query(sqlQuery, (err, data) =>{
+        if(err){
+            console.log(err)
+            return
+        }
+        const products = data
+        console.log(products)
+        res.render('produtos', {products})
+    })
+
+    
 })
 
 app.get("/", (req, res) =>{
