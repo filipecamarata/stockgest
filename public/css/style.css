@@ -125,12 +125,135 @@ html, body{
 }
 
 
+/*Produtos*/
+.titulo{
+    font-size: 2em;
+    margin: 1.2em;
+    text-align: center;
+    color: #01445f;
+}
+
+.products{
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 1550px;  
+    gap: 10px;   
+    justify-content: space-between;
+    margin:auto;
+}
+
+.contents{
+   background-color: #f2f2f2;
+   border-radius: 7px;
+   box-shadow: 1px 2px 8px rgba(0, 0, 0, 0.205);
+   padding: .8em;
+
+}
+.contents h2{
+    color: #01445f;
+    font-weight: bold;
+    font-size: 1.5em;
+    padding: .5em;
+}
+
+.contents:hover{
+    
+    .btn, .btn2{
+        display: block flex;
+    }
+}
+
+.contents .paragrafo-products{
+    font-weight: bold;
+    font-size: 18px;
+    padding: .3em .5em;
+
+}
+
+.contents span{
+    color: #db4c3f;
+}
+
+.actualizacao-products{
+    padding: .3em .5em;
+    font-size: 15px;   
+}
+.btn{
+    display: none;
+    margin-top: 1em;
+    transform: .5s; 
+    justify-content: center;
+    gap: 50px;
+}
+
+.btn .btn-products{
+    text-decoration: none;
+    width: 90px;
+    padding: .4em;
+    color: #fff;
+    background-color: #db4c3f;
+    border-radius: 7px;
+}
+
+.btn .btn-color{
+    text-decoration: none;
+    width: 90px;
+    padding: .4em;
+    background-color: #ccc;
+    border-radius: 7px;
+    color: #0c0a0a;  
+    
+}
+
+.btn .btn-products:hover{
+   border: 1px solid #db4c3f;
+   color: #db4c3f;
+   background-color: #fff;
+   transition: .23s;
+}
+
+
+.btn .btn-color:hover{
+    border: 1px solid black;
+    color: #0c0a0a;
+    background-color: #fff;
+    transition: .23s;
+}
+
+.btn2{
+    display: none;
+    justify-content: center;
+    margin-top: 2em;
+    margin-bottom: 1em;
+    transform: .5s;
+    
+}
+
+.btn2 .btn-add{
+    text-decoration: none;
+    color:#fff;
+    width: 210px;
+    padding: .7em;
+    border-radius: 7px;
+    background-color: #01445f;
+}
+
+.btn2 .btn-add:hover{
+    border: 1px solid #01445f;
+    background-color: #fff;
+    color: #01445f;
+    transition: .23s;
+}
+
+
+
 /*Rodape*/
 
 #footer-r{
     background-color: #ccc;
     padding: 1em;
     height: 140px;
+    margin-top: 1.2em;
 }
 
 #footer-r ul{

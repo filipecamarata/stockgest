@@ -74,8 +74,9 @@ app.get('/products', (req, res) =>{
             console.log(err)
             return
         }
-        const products = data
+        const products = data      
         console.log(products)
+       
         res.render('produtos', {products})
     })
 

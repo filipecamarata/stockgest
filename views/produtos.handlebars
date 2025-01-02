@@ -1,19 +1,22 @@
-<main id="container">   
-
-    <h1>Produtos cadastrados</h1>
-
-
-    <div class="products">
-        {{#each products}}
-            <div class="contents">
-                <h2>{{this.product}}</h2>
-                <p> Quantidade disponível: {{this.amount}}</p>
-                <p>categoria: {{this.category}}</p>
-                <p>Actualizado ultima vez em {{this.updated_at}} por {{this.user}}</p>
-            </div>
-
-        {{/each}}
-    </div>
-    
-
+<main id="container" >   
+    <section class="container-products">
+        <h1 class="titulo">Produtos cadastrados</h1>
+        <div class="products">
+            {{#each products}}
+                <div class="contents">
+                    <h2>{{this.product}}</h2>
+                    <p class="paragrafo-products"> Quantidade disponível: <span>{{this.amount}}</span></p>
+                    <p class="paragrafo-products">Categoria: <span>{{this.category}}</span></p>
+                    <p class="actualizacao-products">Ultima actualização em {{this.updated_at}} por <strong>{{this.user}}</strong></p>
+                    <div class="btn">
+                        <a class="btn-color" href="#">Editar</a>
+                        <a class="btn-products" href="#">Apagar</a>
+                    </div>
+                    <div class="btn2">
+                        <a class="btn-add" href="#">Adicionar na lista de compras</a>
+                    </div>
+                </div>
+            {{/each}}
+        </div>    
+    </section>    
 </main>
