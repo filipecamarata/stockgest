@@ -7,7 +7,7 @@
 
 #nav-bar{    
     background-color: #db4c3f;;
-    padding: 1.5em;
+    padding: 1.5em 1em .1em 1em;
 }
 
 #nav-bar h2{
@@ -36,12 +36,52 @@
     transition: .22s;
 }
 
+.header-search{
+    background-color: #db4c3f;
+    padding: 1em 1em 1.3em 1em;
+    display: flex;
+    justify-content: center;
+}
+
+.form-search{
+    background-color: #fff;
+    width: 600px;
+    padding: .3em;
+    border-radius: .4em;
+  
+}
+
+.form-search input{
+    border: none;
+    width: 550px;
+    height: 28px;
+    padding-left: .4em;
+}
+
+.form-search  button{
+    border: none;
+    background-color: #db4c3f;
+    color: #fff;
+    width: 40px;
+    padding: .5em;
+    cursor: pointer;
+    font-size: .9em;
+}
+
+.form-search  button:hover{
+    border: 1px solid #db4c3f;
+    color: #db4c3f;
+    background-color: #fff;
+    transition: .23s;
+}
+
 /*Body*/
 
 html, body{
     width: 100%;
     height: 100vh;
     background-color: #fff;
+    
 
 }
 
@@ -53,6 +93,24 @@ html, body{
     flex-direction: column;
     background-color: #ecedf3;
     font-family: Arial, Helvetica, sans-serif;
+}
+
+/*Home*/
+
+.h1-home{
+    margin: 1.2em 1.5em 1em 1.5em;
+    font-size: 3.1em;
+    text-align: center;
+}
+.h1-home .enfase{
+    font-weight: bold;
+    color: #db4c3f;
+}
+
+.h2-home{
+    font-size: 1.9em;
+    margin-left: 5.2em;
+    margin-bottom: 1.2em;
 }
 
 /*Cadastro de produtos*/
@@ -104,12 +162,12 @@ html, body{
 }
 
 .btn-form{
-    background-color: #db4c3f;
+    background-color: #01445f;
     color: #fff;
     width: 170px;
     padding: .7em 1.5em;
     font-weight: bold;
-    border-radius: 5px;
+    border-radius: 7px;
     border: none;
     cursor: pointer;
     margin-top: 1.6em;
@@ -119,11 +177,11 @@ html, body{
 }
 
 .btn-form:hover{
-    background-color: #db4c3fde;
-   
-    transition: 0.22s;
+    border: 1px solid #01445f;
+    background-color: #fff;
+    color: #01445f;
+    transition: .23s;
 }
-
 
 /*Produtos*/
 .titulo{
@@ -156,13 +214,6 @@ html, body{
     padding: .5em;
 }
 
-.contents:hover{
-    
-    .btn, .btn2{
-        display: block flex;
-    }
-}
-
 .contents .paragrafo-products{
     font-weight: bold;
     font-size: 18px;
@@ -174,12 +225,16 @@ html, body{
     color: #db4c3f;
 }
 
+.contents form{
+    display: inline-block;
+}
+
 .actualizacao-products{
     padding: .3em .5em;
     font-size: 15px;   
 }
 .btn{
-    display: none;
+    display: flex;
     margin-top: 1em;
     transform: .5s; 
     justify-content: center;
@@ -188,9 +243,12 @@ html, body{
 
 .btn .btn-products{
     text-decoration: none;
+    border: none;
+    cursor: pointer;
     width: 90px;
-    padding: .4em;
+    padding: .6em;
     color: #fff;
+    font-size: 15px;
     background-color: #db4c3f;
     border-radius: 7px;
 }
@@ -198,10 +256,12 @@ html, body{
 .btn .btn-color{
     text-decoration: none;
     width: 90px;
-    padding: .4em;
+    padding: .5em;
+    font-size: 15px;
     background-color: #ccc;
     border-radius: 7px;
     color: #0c0a0a;  
+    border: none;
     
 }
 
@@ -221,7 +281,7 @@ html, body{
 }
 
 .btn2{
-    display: none;
+    display: flex;
     justify-content: center;
     margin-top: 2em;
     margin-bottom: 1em;
@@ -245,6 +305,55 @@ html, body{
     transition: .23s;
 }
 
+.categoria{
+   display: flex; 
+   margin-bottom: 2em;
+   gap: 15px;
+}
+.categoria h4{
+    font-size: 1.4em;
+    margin-top: .4em;
+    margin-left: 1.5em;
+}
+
+.select-form2 {
+    padding: .5em; 
+    height: 30px; 
+}
+
+.form-filtro{
+ background-color: #cccccc9f; 
+ padding: .5em; 
+ width: 245px; 
+ border-radius: .3em;
+}
+.form-filtro select{
+    border: none;
+    background-color: #cccccc00;
+}
+
+.form-filtro select:hover{
+    background-color: #fff;
+    border: 1px solid black;
+    transition: .23s;
+}
+
+.btn-filtro{
+    border: none;
+    font-weight: bold;
+    padding: .5em;
+    background-color: #db4c3f;
+    color: #fff;
+    border-radius: .7em;
+    width: 80px;
+}
+
+.btn-filtro:hover{
+    border:  1px solid #db4c3f;
+    color: #db4c3f;
+    background-color: #fff;
+    transition: .23s;
+}
 
 
 /*Rodape*/

@@ -1,22 +1,42 @@
 <main id="container" >   
-    <section class="container-products">
-        <h1 class="titulo">Produtos cadastrados</h1>
-        <div class="products">
-            {{#each products}}
-                <div class="contents">
-                    <h2>{{this.product}}</h2>
-                    <p class="paragrafo-products"> Quantidade disponível: <span>{{this.amount}}</span></p>
-                    <p class="paragrafo-products">Categoria: <span>{{this.category}}</span></p>
-                    <p class="actualizacao-products">Ultima actualização em {{this.updated_at}} por <strong>{{this.user}}</strong></p>
-                    <div class="btn">
-                        <a class="btn-color" href="#">Editar</a>
-                        <a class="btn-products" href="#">Apagar</a>
-                    </div>
-                    <div class="btn2">
-                        <a class="btn-add" href="#">Adicionar na lista de compras</a>
-                    </div>
+   
+    <h1 class="titulo">Produtos cadastrados</h1>
+    <div class="categoria">
+        <h4>Categorias:</h4>
+       <form class="form-filtro" action="/filtro" method="post">
+            <select  class="select-form2"  name="categoria" id="idFiltro">
+                <option disabled selected value="">Filtrar</option>
+                <option value="1">Alimentos</option>
+                <option value="2">Produtos de limpeza</option>
+                <option value="3">Stock</option>
+                <option value="4">Todos</option>
+        </select>
+        <button class="btn-filtro" type="submit">
+            Filtrar
+        </button>
+       </form>
+    </div>
+    <div class="products">
+        {{#each products}}
+            <div class="contents">
+                <h2>{{this.product}}</h2>
+                <p class="paragrafo-products"> Quantidade disponível: <span>{{this.amount}}</span></p>
+                <p class="paragrafo-products">Categoria: <span>{{this.category}}</span></p>
+                <p class="actualizacao-products">Ultima actualização em {{this.updated_at}} por <strong>{{this.user}}</strong></p>
+                <div class="btn">
+                    <a class="btn-color" href="/product/edit/{{this.id}}">Editar</a>
+                    <form action="/delete/product" method="post">
+                      <input type="hidden" name="id" value="{{this.id}}">
+                      <button class="btn-products" type="submit">
+                          Apagar
+                      </button>
+                    </form>
                 </div>
-            {{/each}}
-        </div>    
-    </section>    
+                <div class="btn2">
+                   <a class="btn-add" href="#">Adicionar na lista de compras</a>
+                </div>
+            </div>
+        {{/each}}
+    </div>    
+      
 </main>

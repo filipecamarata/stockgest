@@ -66,7 +66,7 @@ app.post('/save-product', (req, res) =>{
 
 //Rota para acessar os produtos
 app.get('/products', (req, res) =>{
-    const sqlQuery = `SELECT u.name user, p.name product,  c.name category , p.amount, p.updated_at FROM products AS p join category AS c
+    const sqlQuery = `SELECT u.name user, p.id, p.name product,  c.name category , p.amount, p.updated_at FROM products AS p join category AS c
     on c.id = p.category_id join user AS u on p.user_id = u.id`
     
     conexao.query(sqlQuery, (err, data) =>{
@@ -78,17 +78,96 @@ app.get('/products', (req, res) =>{
         console.log(products)
        
         res.render('produtos', {products})
+    })    
+})
+
+
+//Rota para editar produto
+app.get('/product/edit/:id', (req, res) =>{
+    const id = req.params.id
+    const sqlQuery = `SELECT * FROM products WHERE id = ${id}`
+    conexao.query(sqlQuery, (err, data) =>{
+        if(err){
+            console.log(err)
+            return
+        }
+        const product = data[0]
+        res.render('editProduto', {product})
     })
-
-    
 })
 
+
+//Rota para actualizar os produtos
+app.post('/update-product', (req, res) =>{
+    const id = req.body.id
+    const name = req.body.name
+    const amount = req.body.amount
+    const categoria = req.body.categoria
+
+    const sqlQuery = `UPDATE products SET name ='${name}', amount=${amount}, category_id='${categoria}' WHERE id = ${id}`
+    conexao.query(sqlQuery, (err) =>{
+        if(err){
+            console.log(err)
+            return
+        }
+        res.redirect('/products')
+    })
+})  
+
+//Rota para eliminar produtos
+app.post('/delete/product', (req, res) =>{
+    const id = req.body.id
+    const sqlQuery = `DELETE FROM products WHERE id = ${id}`
+    conexao.query(sqlQuery, (err) =>{
+        if(err){
+            console.log(err)
+            return
+        }
+        res.redirect('/products')
+    })
+})
+
+//Rota para filtrar produtos
+app.post('/filtro', (req, res) =>{
+    const categoria = req.body.categoria
+
+    if (!categoria) {
+        return res.status(400).send("Categoria não fornecida");
+    }
+
+    const sqlQuery = `SELECT u.name user, p.id, p.name product,  c.name category , p.amount, p.updated_at FROM products AS p join category AS c
+    on c.id = p.category_id join user AS u on p.user_id = u.id
+    WHERE p.category_id = ${categoria}`
+
+    conexao.query(sqlQuery, (err, data) =>{
+        if(err){
+            console.log(err)
+            return
+        }
+        const products = data
+        res.render('produtos', {products})
+    })
+})
+
+//Rota da Home
 app.get("/", (req, res) =>{
-    res.render('home')
+    const sqlQuery = `SELECT u.name user, p.id, p.name product,  c.name category , p.amount, p.updated_at FROM products AS p join category AS c
+    on c.id = p.category_id join user AS u on p.user_id = u.id
+    LIMIT 8
+    `
+    conexao.query(sqlQuery, (err, data) =>{
+        if(err){
+            console.log(err)
+            return
+        }
+        const products = data         
+        console.log(products)
+       
+        res.render('home', {products})
+    }) 
+       
 })
 
-
-//Teste de branch
 
 
 //Conexão com banco de dados

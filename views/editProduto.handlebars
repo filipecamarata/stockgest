@@ -1,0 +1,33 @@
+<main id="container">       
+    
+
+    <form class="form-main" action="/update-product" method="post">
+        <h1>Editar produto {{product.name}}</h1>
+        
+        <input type="hidden" name="id" value="{{product.id}}">
+        
+        <div class="form-control">
+            <label for="nome">Nome <span>*</span></label>
+            <input type="text" name="name" id="nome" placeholder="DIgite o nome do produto" value="{{product.name}}" required>
+        </div>
+
+        <div class="form-control">
+            <label for="qtd">Quantidade <span>*</span></label>
+            <input type="number" name="amount" id="qtd" placeholder="Digite a quantidade" value="{{product.amount}}" required>
+        </div>
+
+         <div class="form-control">  
+            <label for="categoria">Categoria <span>*</span></label>
+            <select  class="select-form" name="categoria" id="cteg" required>
+                <option  selected value="">Selecione a categoria</option>
+                <option value="1">Alimentos</option>
+                <option value="2">Produtos de limpeza</option>
+                <option value="3">Stock</option>
+            </select>
+        </div>
+        <div class="btn">
+            <input class="btn-form" type="submit" value="Editar">
+        </div>
+    </form>
+
+</main>

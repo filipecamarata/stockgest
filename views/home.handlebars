@@ -1,3 +1,34 @@
 <main id="container">
-<h1>Home stockgest</h1>
+<h1 class="h1-home"><span class="enfase">Stockgest</span> a sua ferramenta de gestão para seus <span class="enfase">produtos de casa</span></h1>
+<h2 class="h2-home">Alimentos</h2>
+        <div class="products">
+            {{#each products}}
+                <div class="contents">
+                    <h2>{{this.product}}</h2>
+                    <p class="paragrafo-products"> Quantidade disponível: <span>{{this.amount}}</span></p>
+                    <p class="paragrafo-products">Categoria: <span>{{this.category}}</span></p>
+                    <p class="actualizacao-products">Ultima actualização em {{this.updated_at}} por <strong>{{this.user}}</strong></p>
+                   
+                    <div class="btn2">
+                        <a class="btn-add" href="#">Adicionar na lista de compras</a>
+                    </div>
+                </div>
+            {{/each}}
+        </div>    
+
+        <h2 class="h2-home">Produtos de limpeza</h2>
+        <div class="products">
+            {{#each products2}}
+                <div class="contents">
+                    <h2>{{this.product}}</h2>
+                    <p class="paragrafo-products"> Quantidade disponível: <span>{{this.amount}}</span></p>
+                    <p class="paragrafo-products">Categoria: <span>{{this.category}}</span></p>
+                    <p class="actualizacao-products">Ultima actualização em {{this.updated_at}} por <strong>{{this.user}}</strong></p>
+                   
+                    <div class="btn2">
+                        <a class="btn-add" href="#">Adicionar na lista de compras</a>
+                    </div>
+                </div>
+            {{/each}}
+        </div>    
 </main>
