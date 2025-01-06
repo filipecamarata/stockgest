@@ -4,16 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/style.css">
+     <link rel="stylesheet" href="/css/breakpoints.css" media="all">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <title>Stockgest</title>
 </head>
 <body>
     <nav id="nav-bar">
-        <ul>
+        <ul class="icons">
             <li>
                 <h2>Stockgest</h2>
-            </li>
-            <li>
+            </li>  
+            <li class="icone">
+                <i id="burguer" class="bi bi-list" onclick="clickMenu()"></i>
+            </li>                     
+        </ul>
+
+        <menu id="itens">
+            <ul  class="menu">
+             <li>
                 <a href="/">Home</a>
             </li>
             <li>
@@ -32,6 +40,7 @@
                 <a href="#">Sair</a>
             </li>
         </ul>
+        </menu>        
     </nav>
     <header class="header-search">
         <form class="form-search" action="#" method="post">
@@ -54,6 +63,17 @@
         </ul>
         <p>&copy; Todos os direitos reservados a Filipe Camarata</p>
 
-    </footer>    
+    </footer>   
+    
+    <script>
+        //Menu mobile
+       function clickMenu(){
+           if(itens.style.display == 'block'){
+                itens.style.display = 'none'
+            }else{
+                itens.style.display = 'block'                                
+            }
+        }
+    </script>
 </body>
 </html>

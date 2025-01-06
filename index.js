@@ -6,7 +6,7 @@ const mysql = require('mysql')
 const app = express()
 
 //Porta do servidor
-const port = 3000
+const port = 3002
 
 //Configuração do handlebars
 app.engine('handlebars', exphbs.engine())
@@ -189,3 +189,4 @@ conexao.connect(function(err){
     console.log('App conectada ao banco de dados')
     app.listen(port)
 })
+
