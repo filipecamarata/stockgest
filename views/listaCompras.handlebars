@@ -1,0 +1,34 @@
+
+<main id="container">
+    <h1 class="titulo">Lista de compras actual</h1>
+
+<ul class="produtos-list">
+    {{#each list}}
+        <li class="productos-itens">
+            {{#if this.done}}
+                <h3 class="h3 done">{{this.name}}</h3>
+            {{else}}
+                <h3 class="h3">{{this.name}}</h3>
+            {{/if}}
+       
+            <div class="actions">
+                <form class="form-list" action="/updateStatus" method="post">
+                    <input type="hidden" name="idp" value="{{this.product_id}}">
+                    <input type="hidden" name="done" value="{{this.done}}">
+                    <button class="btn-list" type="submit">
+                        <i class="button bi bi-check2"></i>
+                    </button>
+                </form>
+                
+                <form class="form-list" action="/removerProduto" method="post">
+                    <input type="hidden" name="idr" value="{{this.product_id}}">
+                    <button class="btn-list" type="submit"><i class="button2 bi bi-x-lg"></i></button>
+                </form>
+            </div>
+       </li>
+    {{/each}}
+</ul>
+
+</main>
+
+

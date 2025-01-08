@@ -149,6 +149,80 @@ app.post('/filtro', (req, res) =>{
     })
 })
 
+//Rota para adicionar produtos na lista de compras
+app.post('/listaCompras', (req, res) =>{
+    const id = req.body.id
+    const name = req.body.name
+    const done = req.body.done
+
+    const sqlQuery = `INSERT INTO listCompras (product_id, name, done) values (${id}, '${name}', ${done}) `
+    conexao.query(sqlQuery, (err) =>{
+        if(err){
+            console.log(err)            
+            return
+        }
+        const sql = `SELECT product_id,  name, done FROM listCompras`
+        conexao.query(sql, (err, data) =>{
+            if(err){
+                console.log(err)
+                return
+            }
+            const list = data
+            console.log(list)
+            res.render('listaCompras', {list})
+        })
+   
+    })
+
+
+})
+
+//Rota para abrir a lista de compras
+app.get('/listaCompras', (req, res) =>{
+
+   const sql = `SELECT product_id, name, done FROM listCompras`
+        conexao.query(sql, (err, data) =>{
+            if(err){
+                console.log(err)
+                return
+            }
+            const list = data
+            console.log(list)
+            res.render('listaCompras', {list})
+        })
+})
+
+//Rota para actualizar a lista de compras
+app.post('/updateStatus', (req, res)=>{
+    const id = req.body.idp
+    const done = req.body.done === '0' ? 1 : 0
+       
+    const sqlQuery = `UPDATE listCompras SET done =${done} WHERE product_id = ${id}`
+    conexao.query(sqlQuery, (err) =>{
+        if(err){
+            console.log(err)
+            return
+        }
+        console.log(id)
+        res.redirect('/listaCompras')
+    })  
+
+})
+
+//Rota para remover produto da lista de compras
+app.post('/removerProduto', (req, res) =>{
+    const id = req.body.idr
+
+    const sqlQuery = `DELETE FROM listCompras WHERE product_id = ${id}`
+    conexao.query(sqlQuery, (err) =>{
+        if(err){
+            console.log(err)
+            return
+        }
+        res.redirect('/listaCompras')
+    })
+})
+
 //Rota da Home
 app.get("/", (req, res) =>{
     const sqlQuery = `SELECT u.name user, p.id, p.name product,  c.name category , p.amount, p.updated_at FROM products AS p join category AS c
@@ -169,9 +243,7 @@ app.get("/", (req, res) =>{
 })
 
 
-
 //Conexão com banco de dados
-
 const conexao = mysql.createConnection({
     host:'localhost',
     user: 'root',

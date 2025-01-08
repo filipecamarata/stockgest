@@ -8,10 +8,17 @@
                     <p class="paragrafo-products"> Quantidade disponível: <span>{{this.amount}}</span></p>
                     <p class="paragrafo-products">Categoria: <span>{{this.category}}</span></p>
                     <p class="actualizacao-products">Ultima actualização em {{this.updated_at}} por <strong>{{this.user}}</strong></p>
-                   
-                    <div class="btn2">
-                        <a class="btn-add" href="#">Adicionar na lista de compras</a>
+                   <div class="btn2">
+                        <form action="/listaCompras" method="post">
+                            <input type="hidden" name="id" value="{{this.id}}">
+                            <input type="hidden" name="name" value="{{this.product}}">
+                            <input type="hidden" name="done" value="0">
+                            <button class="btn-add" type="submit">
+                                Adicionar na lista de compras
+                            </button>
+                         </form>
                     </div>
+              
                 </div>
             {{/each}}
         </div>    
@@ -26,8 +33,16 @@
                     <p class="actualizacao-products">Ultima actualização em {{this.updated_at}} por <strong>{{this.user}}</strong></p>
                    
                     <div class="btn2">
-                        <a class="btn-add" href="#">Adicionar na lista de compras</a>
+                        <form action="/listaCompras" method="post">
+                            <input type="hidden" name="id" value="{{this.id}}">
+                            <input type="hidden" name="name" value="{{this.product}}">
+                            <input type="hidden" name="done" value="0">
+                            <button class="btn-add" type="submit">
+                                Adicionar na lista de compras
+                            </button>
+                         </form>
                     </div>
+              
                 </div>
             {{/each}}
         </div>    

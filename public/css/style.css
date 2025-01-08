@@ -1,6 +1,7 @@
 *{
     margin: 0;
     padding: 0;
+    font-family: Helvetica;
 }
 
 
@@ -27,8 +28,10 @@ html, body{
 #nav-bar{    
     background-color: #db4c3f;;
     padding: 1.5em 1em .1em 1em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
-
 #nav-bar h2{
     color: #ccc; 
     font-size: 1.3em;
@@ -44,7 +47,7 @@ html, body{
 #nav-bar a{
     text-decoration: none;
     color: #ffff;
-    font-size: 1.1em;
+    font-size: 1em;
     padding: .5em;
 }
 
@@ -59,12 +62,11 @@ html, body{
     display: flex;
     justify-content: space-between;
     list-style: none;
-    font-size: 1.8em;  
-    
+    font-size: 1.8em;     
     margin-bottom: .5em;  
 }
 
-#nav-bar .icone{
+#nav-bar #burguer{
     display: none;
 }
 
@@ -75,6 +77,10 @@ html, body{
     font-size: 1.2em;   
     list-style: none; 
     margin-bottom: .5em;     
+}
+
+#nav-bar .menu li{
+    margin-left: 20px;
 }
 
 .header-search{
@@ -316,8 +322,7 @@ html, body{
     
 }
 
-.btn2 .btn-add{
-    text-decoration: none;
+.btn2 .btn-add{      
     color:#fff;
     width: 230px;
     font-weight: bold;
@@ -383,6 +388,57 @@ html, body{
     transition: .23s;
 }
 
+/*Lista de compras*/
+.productos-itens{
+    display: flex;
+    justify-content: space-between;
+    width: 300px;
+    margin: auto;
+    padding: .5em;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: .9em;
+
+}
+
+.actions{
+    display: flex;
+    gap: 10px;
+   
+}
+
+.h3 {
+    font-weight: bold;
+    color: #01445f;
+    transition: .5s;
+    font-size: 1.2em;
+}
+
+.button{
+    font-size: 1.5em;
+    margin-right: .7em;
+    color: rgb(10, 172, 10) ;
+    height: .5em;    
+    cursor: pointer;
+}
+
+.button2{
+    font-size: 1.5em;
+    margin-right: .1em;
+    color: #db4c3f ;
+    height: .5em;
+    cursor: pointer;
+}
+
+.btn-list{
+    border: none;
+    background-color: #ecedf3;
+}
+
+.done{
+    text-decoration: line-through; 
+    color: #ccc;
+ 
+ }
 /*Rodape*/
 
 #footer-r{

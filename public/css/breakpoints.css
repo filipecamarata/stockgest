@@ -6,18 +6,21 @@
 #nav-bar{    
     background-color: #db4c3f;;
     padding: 1.2em 1em .1em .8em;
+    display: block;   
 }
 
 #nav-bar .icons{
     display: flex;
     justify-content: space-between;
     list-style: none;
+    font-size: 1.1em;
 }
 
 #nav-bar #burguer{
     color: #fff;
-    font-size: 2em;
+    font-size: 1.3em;
     cursor: pointer;
+    display: block;
 }
 
 #nav-bar .menu{
