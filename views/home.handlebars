@@ -21,29 +21,5 @@
               
                 </div>
             {{/each}}
-        </div>    
-
-        <h2 class="h2-home">Produtos de limpeza</h2>
-        <div class="products">
-            {{#each products2}}
-                <div class="contents">
-                    <h2>{{this.product}}</h2>
-                    <p class="paragrafo-products"> Quantidade disponível: <span>{{this.amount}}</span></p>
-                    <p class="paragrafo-products">Categoria: <span>{{this.category}}</span></p>
-                    <p class="actualizacao-products">Ultima actualização em {{this.updated_at}} por <strong>{{this.user}}</strong></p>
-                   
-                    <div class="btn2">
-                        <form action="/listaCompras" method="post">
-                            <input type="hidden" name="id" value="{{this.id}}">
-                            <input type="hidden" name="name" value="{{this.product}}">
-                            <input type="hidden" name="done" value="0">
-                            <button class="btn-add" type="submit">
-                                Adicionar na lista de compras
-                            </button>
-                         </form>
-                    </div>
-              
-                </div>
-            {{/each}}
-        </div>    
+        </div>         
 </main>

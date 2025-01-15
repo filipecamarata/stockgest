@@ -1,0 +1,44 @@
+<main id="container">       
+    
+    <form class="form-main form-user-hei" action="/save-user" method="post">
+        <h1>Cadastro de usuario</h1>
+       
+        <div class="form-control">
+            <label for="nome">Nome <span>*</span></label>
+            <input type="text" name="name" id="nome" placeholder="DIgite o seu nome " required>
+        </div>
+
+        <div class="form-control">
+            <label for="email">Email <span>*</span></label>
+            <input type="email" name="email" id="email" placeholder="Digite o seu email" required>
+        </div>
+
+         <div class="form-control">
+            <label for="num">Número de telefone <span>*</span></label>
+            <input type="text" name="number" id="num" placeholder="(00) 00000-0000" required>
+        </div>
+
+        <div class="form-control">
+            <label for="senha">Senha <span>*</span></label>
+            <input type="password" name="senha" id="senha" placeholder="Digite sua senha" required>
+        </div>
+
+        <div class="form-control">
+            <label for="confsenha">Confirmar-senha <span>*</span></label>
+            <input type="password" name="confSenha" id="confsenha" placeholder="Confirme sua senha" required>
+        </div>
+         
+        <div class="btn">
+            <input class="btn-form" type="submit" value="Cadastrar">
+        </div>
+
+        <p class="pergunta-p">Já tem uma conta? <a href="/login">Clique aqui</a></p>
+    </form>
+
+
+<script src="https://unpkg.com/vanilla-masker/build/vanilla-masker.min.js"></script>
+<script>
+    VMasker(document.querySelector("#num")).maskPattern("(99) 99999-9999");
+</script>
+
+</main>

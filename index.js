@@ -2,6 +2,9 @@
 const express = require('express')
 const exphbs = require('express-handlebars')
 const mysql = require('mysql')
+const session = require('express-session')
+const FileStore = require('session-file-store')(session)
+const flash = require('express-flash')
 
 const app = express()
 
@@ -23,8 +26,53 @@ app.set(express.json())
 app.use(express.static('public'))
 
 
-//Rotas do projecto
+//session midleware
+app.use(
+    session({
+        name: 'session',
+        secret: 'nosso_secret',
+        resave: false,
+        saveUninitialized: false,
+        store: new FileStore({
+            logFn: function() {},
+            path: require('path').join(require('os').tmpdir(), 'sessions')
+        }),
+        cookie:{
+            secure: false,
+            maxAge:360000,
+            expires: new Date(Date.now() + 360000),
+            httpOnly: true
+        }
+    })
+)
+  
+// flash menssages
+app.use(flash())
 
+// set session to res
+app.use((req, res, next) => {
+    // console.log(req.session)
+    console.log(req.session.userid);
+  
+    if (req.session.userid) {
+      res.locals.session = req.session;
+    }
+  
+    next()
+  })
+
+  //Rotas do projecto
+
+
+//Rota de login
+app.get('/login', (req, res) =>{
+    res.render('login')
+})
+
+//Rota de registro
+app.get('/registrar', (req, res) =>{
+    res.render('cadastroUser')
+})
 
 //Rota para cadastro de produto
 app.get('/add', (req, res) =>{
@@ -155,25 +203,45 @@ app.post('/listaCompras', (req, res) =>{
     const name = req.body.name
     const done = req.body.done
 
-    const sqlQuery = `INSERT INTO listCompras (product_id, name, done) values (${id}, '${name}', ${done}) `
-    conexao.query(sqlQuery, (err) =>{
+    //checando se o produto ja foi adicionado
+    const sqlCheck = `SELECT name prod FROM listCompras Where product_id = ${id}`
+    conexao.query(sqlCheck, (err, data) =>{
         if(err){
-            console.log(err)            
+            console.log(err)
             return
-        }
-        const sql = `SELECT product_id,  name, done FROM listCompras`
-        conexao.query(sql, (err, data) =>{
+        }        
+       
+        if(data.length > 0){
+            console.log(data) 
+            console.log(`Produto ja adicionado na lista de compras`)
+            //mensagens
+            res.redirect('/listaCompras')
+          
+        } else{
+            const sqlQuery = `INSERT INTO listCompras (product_id, name, done) values (${id}, '${name}', ${done}) `
+            conexao.query(sqlQuery, (err) =>{
             if(err){
-                console.log(err)
+                console.log(err)            
                 return
             }
-            const list = data
-            console.log(list)
-            res.render('listaCompras', {list})
+            const sql = `SELECT product_id,  name, done FROM listCompras`
+            conexao.query(sql, (err, data) =>{
+                if(err){
+                    console.log(err)
+                    return
+                }
+                const list = data
+                console.log(list)
+                res.render('listaCompras', {list})
+            })
+       
         })
-   
+        }
+
+        
     })
 
+   
 
 })
 
@@ -226,19 +294,21 @@ app.post('/removerProduto', (req, res) =>{
 //Rota da Home
 app.get("/", (req, res) =>{
     const sqlQuery = `SELECT u.name user, p.id, p.name product,  c.name category , p.amount, p.updated_at FROM products AS p join category AS c
-    on c.id = p.category_id join user AS u on p.user_id = u.id
-    LIMIT 8
+    on c.id = p.category_id join user AS u on p.user_id = u.id    
     `
+  
     conexao.query(sqlQuery, (err, data) =>{
         if(err){
             console.log(err)
             return
         }
-        const products = data         
+        const products = data                
         console.log(products)
        
         res.render('home', {products})
-    }) 
+        
+    })   
+       
        
 })
 

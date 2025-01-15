@@ -19,27 +19,36 @@
             </li>                     
         </ul>
 
-        <menu id="itens">
+        <menu id="itens">          
             <ul  class="menu">
-             <li>
-                <a href="/">Home</a>
-            </li>
-            <li>
-                <a href="/add">Cadastrar produto</a>
-            </li>
-            <li>
-                <a href="/products">Produtos</a>
-            </li>
-             <li>
-                <a href="/listaCompras">Lista de compras</a>
-            </li>
-            <li>
-                <a href="#">Perfil</a>
-            </li>
-            <li>
-                <a href="#">Sair</a>
-            </li>
-        </ul>
+                {{#if session.userid}}
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    <li>
+                        <a href="/add">Cadastrar produto</a>
+                    </li>
+                    <li>
+                        <a href="/products">Produtos</a>
+                    </li>
+                    <li>
+                        <a href="/listaCompras">Lista de compras</a>
+                    </li>           
+                    <li>
+                        <a href="/logout">Sair</a>
+                    </li>          
+                {{else}}
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    <li>
+                        <a href="/login">Entrar</a>
+                    </li>
+                    <li>
+                        <a href="/registrar">Registrar</a>
+                    </li>
+                {{/if}}          
+            </ul>
         </menu>        
     </nav>
     <header class="header-search">
