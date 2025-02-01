@@ -5,11 +5,15 @@ const mysql = require('mysql')
 const session = require('express-session')
 const FileStore = require('session-file-store')(session)
 const flash = require('express-flash')
+const bcrypt = require('bcryptjs')
 
 const app = express()
 
 //Porta do servidor
 const port = 3002
+
+//helpers
+const checkAuth = require('./helpers/auth').checkAuth
 
 //Configuração do handlebars
 app.engine('handlebars', exphbs.engine())
@@ -31,19 +35,19 @@ app.use(
     session({
         name: 'session',
         secret: 'nosso_secret',
-        resave: false,
+        resave: true,   // 🔵 Mantém a sessão ativa enquanto o usuário interage
         saveUninitialized: false,
         store: new FileStore({
-            logFn: function() {},
+            logFn: function () {},
             path: require('path').join(require('os').tmpdir(), 'sessions')
         }),
-        cookie:{
+        cookie: {
             secure: false,
-            maxAge:360000,
-            expires: new Date(Date.now() + 360000),
+            maxAge: 86400000, 
             httpOnly: true
         }
     })
+    
 )
   
 // flash menssages
@@ -51,15 +55,10 @@ app.use(flash())
 
 // set session to res
 app.use((req, res, next) => {
-    // console.log(req.session)
-    console.log(req.session.userid);
-  
-    if (req.session.userid) {
-      res.locals.session = req.session;
-    }
-  
-    next()
-  })
+    res.locals.session = req.session || {}; // 🔵 Garante que session esteja sempre definido
+    next();
+});
+
 
   //Rotas do projecto
 
@@ -68,21 +67,133 @@ app.use((req, res, next) => {
 app.get('/login', (req, res) =>{
     res.render('login')
 })
+app.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        // Checando se o email existe (SQL Seguro)
+        const sqlCheck = `SELECT * FROM user WHERE email = ?`;
+        
+        const results = await new Promise((resolve, reject) => {
+            conexao.query(sqlCheck, [email], (err, data) => {
+                if (err) return reject(err);
+                resolve(data);
+            });
+        });
+
+        // Verifica se o usuário foi encontrado
+        if (results.length === 0) {
+            req.flash('message', 'Nenhum usuário encontrado');
+            return res.redirect('/login');
+        }
+
+        // Usuário encontrado
+        const user = results[0];
+
+        // Verifica a senha
+        const passwordMatch = await bcrypt.compare(password, user.password);
+        if (!passwordMatch) {
+            req.flash('message', 'Senha incorreta');
+            return res.redirect('/login');
+        }
+
+        // Criar sessão
+        req.session.userid = user.id;
+        req.flash('message', 'Login realizado com sucesso');
+
+        // Salvar sessão antes de redirecionar
+        req.session.save(() => {
+            return res.redirect('/');
+        });
+
+    } catch (error) {
+        console.error('Erro ao processar login:', error);
+        req.flash('message', 'Erro ao processar login');
+        return res.redirect('/login');
+    }
+});
+
+
+app.get('/logout', (req, res) =>{
+
+    req.session.destroy(()=>{        
+        res.redirect('/')       
+    })
+
+})
 
 //Rota de registro
 app.get('/registrar', (req, res) =>{
     res.render('cadastroUser')
 })
 
+
+app.post('/save-user', async (req, res) =>{
+    const {name, email, number, password, confpassword} = req.body
+    try {
+        //checando se o email já existe no bamco de dados
+        const sqlCheck = `SELECT * FROM user WHERE email = ?`
+        
+        const results = await new Promise((resolve, reject) =>{
+            conexao.query(sqlCheck,[email],(err, data) =>{
+                if(err){
+                    console.log(err)
+                   return reject(err)
+                }
+               resolve(data)                 
+            })
+        })
+        
+        if(results.length > 0){
+            console.log('Usuario ja existe')
+            req.flash('message', 'Usuário já existe!!')
+            return res.redirect('/registrar')
+        }
+
+        //Checando se as senhas são iguais
+        if(password !== confpassword){
+            req.flash('message', 'Senhas diferentes, tente novamente')
+            return res.redirect('/registrar')
+        }
+
+        //Criar senha criptografada
+        const salt = bcrypt.genSaltSync(10)
+        const hashedPassword = await bcrypt.hashSync(password, salt)
+
+        //Inserindo dados no banco de dados
+        
+            const sqlQuery = `INSERT INTO user (name, email, number_phone, password)
+            VALUES (?, ?, ?, ?)`
+            await new Promise((resolve, reject) =>{
+                conexao.query(sqlQuery, [name, email, number, hashedPassword], (err)=>{
+                    if(err){
+                     console.log(err)
+                     return reject(err)                 
+                    
+                    }resolve()     
+                })               
+                    
+            })
+
+            req.flash('message', 'Cadastro realizado com sucesso')
+           return res.redirect('/')
+    } catch (error) {
+        console.log(error)
+    }
+
+})
+
+
 //Rota para cadastro de produto
-app.get('/add', (req, res) =>{
-    const sqlQuery = `SELECT id FROM user WHERE email = 'filipeedvandro942@gmail.com'`
+app.get('/add', checkAuth, (req, res) =>{
+     const id = req.session.userid
+    const sqlQuery = `SELECT id FROM user WHERE id = ${id} `
     conexao.query(sqlQuery, (err, data)=>{
         if(err){
             console.log(err)
             return
         }
-        const identificador = data
+        const identificador = data        
         console.log(identificador)
         res.render('cadastro', {identificador})
     })
@@ -91,29 +202,35 @@ app.get('/add', (req, res) =>{
 })
 
 //Rota para salvar os dados do produto na bd
-app.post('/save-product', (req, res) =>{
+app.post('/save-product', checkAuth, (req, res) =>{
     const user_id = req.body.id
     const nome = req.body.name
     const quantidade = req.body.amount
     const categoria = req.body.categoria
 
     const sqlQuery = `INSERT INTO products (user_id, category_id, name, amount)
-                    values('${user_id}', '${categoria}', '${nome}', '${quantidade}')`
+                    values(?, ?, ?, ?)`
     
-    conexao.query(sqlQuery, (err) =>{
+    conexao.query(sqlQuery, [user_id, categoria, nome, quantidade ], (err) =>{
         if(err){
             console.log(err)
             return
         }
+        req.flash('message', 'Produto cadastrado com sucesso')
+        console.log("Mensagem Flash Armazenada: Produto atualizado com sucesso 4"); // <-- Verifique no console
 
-        res.redirect('/add')
+   
+        return res.redirect('/add')
     })
 
 })
 
 
 //Rota para acessar os produtos
-app.get('/products', (req, res) =>{
+app.get('/products', checkAuth, (req, res) =>{
+    const message = req.flash('message')[0] || null; // Recupera a mensagem da sessão e / Pegando a primeira mensagem ou null
+    //console.log('Mensagem Flash:', message); 
+
     const sqlQuery = `SELECT u.name user, p.id, p.name product,  c.name category , p.amount, p.updated_at FROM products AS p join category AS c
     on c.id = p.category_id join user AS u on p.user_id = u.id`
     
@@ -123,15 +240,15 @@ app.get('/products', (req, res) =>{
             return
         }
         const products = data      
-        console.log(products)
+        //console.log(products)
        
-        res.render('produtos', {products})
+        res.render('produtos', {products, message})
     })    
 })
 
 
 //Rota para editar produto
-app.get('/product/edit/:id', (req, res) =>{
+app.get('/product/edit/:id', checkAuth, (req, res) =>{
     const id = req.params.id
     const sqlQuery = `SELECT * FROM products WHERE id = ${id}`
     conexao.query(sqlQuery, (err, data) =>{
@@ -146,7 +263,7 @@ app.get('/product/edit/:id', (req, res) =>{
 
 
 //Rota para actualizar os produtos
-app.post('/update-product', (req, res) =>{
+app.post('/update-product', checkAuth, (req, res) =>{
     const id = req.body.id
     const name = req.body.name
     const amount = req.body.amount
@@ -158,12 +275,13 @@ app.post('/update-product', (req, res) =>{
             console.log(err)
             return
         }
-        res.redirect('/products')
+        req.flash('message', 'Produto actualizado com sucesso')
+       return res.redirect('/products')
     })
 })  
 
 //Rota para eliminar produtos
-app.post('/delete/product', (req, res) =>{
+app.post('/delete/product', checkAuth, (req, res) =>{
     const id = req.body.id
     const sqlQuery = `DELETE FROM products WHERE id = ${id}`
     conexao.query(sqlQuery, (err) =>{
@@ -171,12 +289,13 @@ app.post('/delete/product', (req, res) =>{
             console.log(err)
             return
         }
+        req.flash('message', 'Produto removido com sucesso')
         res.redirect('/products')
     })
 })
 
 //Rota para filtrar produtos
-app.post('/filtro', (req, res) =>{
+app.post('/filtro', checkAuth, (req, res) =>{
     const categoria = req.body.categoria
 
     if (!categoria) {
@@ -198,7 +317,7 @@ app.post('/filtro', (req, res) =>{
 })
 
 //Rota para adicionar produtos na lista de compras
-app.post('/listaCompras', (req, res) =>{
+app.post('/listaCompras', checkAuth, (req, res) =>{
     const id = req.body.id
     const name = req.body.name
     const done = req.body.done
@@ -206,16 +325,16 @@ app.post('/listaCompras', (req, res) =>{
     //checando se o produto ja foi adicionado
     const sqlCheck = `SELECT name prod FROM listCompras Where product_id = ${id}`
     conexao.query(sqlCheck, (err, data) =>{
-        if(err){
+        if(err){            
             console.log(err)
             return
         }        
        
         if(data.length > 0){
             console.log(data) 
-            console.log(`Produto ja adicionado na lista de compras`)
-            //mensagens
-            res.redirect('/listaCompras')
+           //console.log(`Produto ja adicionado na lista de compras`)
+            req.flash('message', 'Produto ja adicionado na lista de compras')
+            return res.redirect('/listaCompras')
           
         } else{
             const sqlQuery = `INSERT INTO listCompras (product_id, name, done) values (${id}, '${name}', ${done}) `
@@ -231,8 +350,9 @@ app.post('/listaCompras', (req, res) =>{
                     return
                 }
                 const list = data
-                console.log(list)
-                res.render('listaCompras', {list})
+                //console.log(list)
+                req.flash('message', 'Produto adicionado com sucesso')
+               return res.render('listaCompras', {list})
             })
        
         })
@@ -246,8 +366,8 @@ app.post('/listaCompras', (req, res) =>{
 })
 
 //Rota para abrir a lista de compras
-app.get('/listaCompras', (req, res) =>{
-
+app.get('/listaCompras', checkAuth, (req, res) =>{
+    const message = req.flash('message')[0] || null
    const sql = `SELECT product_id, name, done FROM listCompras`
         conexao.query(sql, (err, data) =>{
             if(err){
@@ -255,13 +375,13 @@ app.get('/listaCompras', (req, res) =>{
                 return
             }
             const list = data
-            console.log(list)
-            res.render('listaCompras', {list})
+            //console.log(list)
+            res.render('listaCompras', {list, message})
         })
 })
 
 //Rota para actualizar a lista de compras
-app.post('/updateStatus', (req, res)=>{
+app.post('/updateStatus', checkAuth, (req, res)=>{
     const id = req.body.idp
     const done = req.body.done === '0' ? 1 : 0
        
@@ -271,14 +391,14 @@ app.post('/updateStatus', (req, res)=>{
             console.log(err)
             return
         }
-        console.log(id)
+        //console.log(id)
         res.redirect('/listaCompras')
     })  
 
 })
 
 //Rota para remover produto da lista de compras
-app.post('/removerProduto', (req, res) =>{
+app.post('/removerProduto', checkAuth, (req, res) =>{
     const id = req.body.idr
 
     const sqlQuery = `DELETE FROM listCompras WHERE product_id = ${id}`
@@ -287,7 +407,8 @@ app.post('/removerProduto', (req, res) =>{
             console.log(err)
             return
         }
-        res.redirect('/listaCompras')
+        req.flash('message', 'Produto removido com sucesso')
+      return res.redirect('/listaCompras')
     })
 })
 
@@ -303,7 +424,7 @@ app.get("/", (req, res) =>{
             return
         }
         const products = data                
-        console.log(products)
+       // console.log(products)
        
         res.render('home', {products})
         
