@@ -7,6 +7,10 @@ const FileStore = require('session-file-store')(session)
 const flash = require('express-flash')
 const bcrypt = require('bcryptjs')
 
+//Biblioteca para formatar a data
+const { format } = require('date-fns')
+const { ptBR } = require('date-fns/locale')
+
 const app = express()
 
 //Porta do servidor
@@ -190,12 +194,27 @@ app.get('/add', checkAuth, (req, res) =>{
     const sqlQuery = `SELECT id FROM user WHERE id = ${id} `
     conexao.query(sqlQuery, (err, data)=>{
         if(err){
-            console.log(err)
-            return
+         return console.log(err)
+           
         }
-        const identificador = data        
-        console.log(identificador)
-        res.render('cadastro', {identificador})
+
+        //Dados retornados da tabela  user
+        const id = data        
+        //console.log(identificador)
+
+        //Pegando os dados da tabela img_source
+        const sqlImg =`select * from img_source order by name asc`
+        conexao.query(sqlImg, (err, data) =>{
+            if(err){
+              return  console.log(err)           
+            }
+            
+            //Dados retornados da tabela img_source
+            const source = data          
+
+            res.render('cadastro', {id, source})
+        })
+        
     })
 
     
@@ -206,12 +225,13 @@ app.post('/save-product', checkAuth, (req, res) =>{
     const user_id = req.body.id
     const nome = req.body.name
     const quantidade = req.body.amount
-    const categoria = req.body.categoria
+    const category_id = req.body.categoria
+    const img_id = req.body.imagem
 
-    const sqlQuery = `INSERT INTO products (user_id, category_id, name, amount)
-                    values(?, ?, ?, ?)`
+    const sqlQuery = `INSERT INTO products (user_id, category_id, img_id, name, amount)
+                    values(?, ?, ?, ?, ?)`
     
-    conexao.query(sqlQuery, [user_id, categoria, nome, quantidade ], (err) =>{
+    conexao.query(sqlQuery, [user_id, category_id, img_id, nome, quantidade ], (err) =>{
         if(err){
             console.log(err)
             return
@@ -231,18 +251,47 @@ app.get('/products', checkAuth, (req, res) =>{
     const message = req.flash('message')[0] || null; // Recupera a mensagem da sessão e / Pegando a primeira mensagem ou null
     //console.log('Mensagem Flash:', message); 
 
-    const sqlQuery = `SELECT u.name user, p.id, p.name product,  c.name category , p.amount, p.updated_at FROM products AS p join category AS c
-    on c.id = p.category_id join user AS u on p.user_id = u.id`
+     //Query para selecionar apenas os produtos de alimentação
+    const sqlQuery = `SELECT u.name user, p.id, p.name product,  c.name category, i.path , p.amount, p.updated_at FROM products AS p
+    join category AS c
+    on c.id = p.category_id join user AS u on p.user_id = u.id
+    join img_source i on i.id = p.img_id WHERE category_id =1`
     
     conexao.query(sqlQuery, (err, data) =>{
         if(err){
             console.log(err)
             return
         }
-        const products = data      
-        //console.log(products)
+
+        //Converte a data em padrão brasileiro
+        const products = data.map(result => ({
+            ...result, //Faz um copia do array principal sem modificá-lo
+            updated_at: format(new Date(result.updated_at), 'dd/MM/yyyy', { locale: ptBR })          
+
+        }))
+
+        //Query para selecionar apenas os produtos de limpeza
+        const sqlQuery2 = `SELECT u.name user, p.id, p.name product,  c.name category, i.path , p.amount, p.updated_at FROM products AS p
+            join category AS c
+            on c.id = p.category_id join user AS u on p.user_id = u.id
+            join img_source i on i.id = p.img_id WHERE category_id =2`
+        conexao.query(sqlQuery2, (err, data) =>{
+            if(err){
+                return console.log(err)
+            }
+            //Converte a data em padrão brasileiro
+            const products2 = data.map(result => ({
+                ...result, //Faz um copia do array principal sem modificá-las
+                updated_at: format(new Date(result.updated_at), 'dd/MM/yyyy', { locale: ptBR })          
+    
+            }))
+
+            console.log(products)
        
-        res.render('produtos', {products, message})
+        res.render('produtos', {products, products2, message})
+        })
+     
+        
     })    
 })
 
@@ -253,11 +302,22 @@ app.get('/product/edit/:id', checkAuth, (req, res) =>{
     const sqlQuery = `SELECT * FROM products WHERE id = ${id}`
     conexao.query(sqlQuery, (err, data) =>{
         if(err){
-            console.log(err)
-            return
+          return console.log(err)           
         }
         const product = data[0]
-        res.render('editProduto', {product})
+
+        const sqlImg =`select * from img_source order by name asc`
+        conexao.query(sqlImg, (err, data) =>{
+            if(err){
+              return  console.log(err)           
+            }
+            
+            //Dados retornados da tabela img_source
+            const source = data          
+
+            res.render('editProduto', {product, source})
+        })                    
+        
     })
 })
 
@@ -268,9 +328,10 @@ app.post('/update-product', checkAuth, (req, res) =>{
     const name = req.body.name
     const amount = req.body.amount
     const categoria = req.body.categoria
+    const imagem = req.body.imagem
 
-    const sqlQuery = `UPDATE products SET name ='${name}', amount=${amount}, category_id='${categoria}' WHERE id = ${id}`
-    conexao.query(sqlQuery, (err) =>{
+    const sqlQuery = `UPDATE products SET category_id= ?, img_id = ?,  name = ?, amount= ? WHERE id = ${id}`
+    conexao.query(sqlQuery, [categoria, imagem, name, amount ], (err) =>{
         if(err){
             console.log(err)
             return
@@ -368,7 +429,7 @@ app.post('/listaCompras', checkAuth, (req, res) =>{
 //Rota para abrir a lista de compras
 app.get('/listaCompras', checkAuth, (req, res) =>{
     const message = req.flash('message')[0] || null
-   const sql = `SELECT product_id, name, done FROM listCompras`
+   const sql = `SELECT product_id, name, done FROM lista_compras`
         conexao.query(sql, (err, data) =>{
             if(err){
                 console.log(err)

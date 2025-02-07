@@ -15,17 +15,19 @@
                 <option disabled selected value="">Selecionar categoria</option>
                 <option value="1">Alimentos</option>
                 <option value="2">Produtos de limpeza</option>
-                <option value="3">Stock</option>
-                <option value="4">Todos</option>
+                <option value="3">Stock</option>                
         </select>
         <button class="btn-filtro" type="submit">
             Filtrar
         </button>
        </form>
     </div>
+      <h2 class="h2-titulo">Produtos alimentares</h2>
     <div class="products">
+      
         {{#each products}}
             <div class="contents">
+                <img src="{{this.path}}" alt="{{this.product}}">
                 <h2>{{this.product}}</h2>
                 <p class="paragrafo-products"> Quantidade disponível: <span>{{this.amount}}</span></p>
                 <p class="paragrafo-products">Categoria: <span>{{this.category}}</span></p>
@@ -55,4 +57,40 @@
         {{/each}}
     </div>    
       
+      <!--Produtos de limpeza-->
+
+       <h2 class="h2-titulo">Produtos de limpeza</h2>
+    <div class="products">
+      
+        {{#each products2}}
+            <div class="contents">
+                <img src="{{this.path}}" alt="{{this.product}}">
+                <h2>{{this.product}}</h2>
+                <p class="paragrafo-products"> Quantidade disponível: <span>{{this.amount}}</span></p>
+                <p class="paragrafo-products">Categoria: <span>{{this.category}}</span></p>
+                <p class="actualizacao-products">Ultima actualização em {{this.updated_at}} por <strong>{{this.user}}</strong></p>
+                <div class="btn-produtos">
+                    <a class="btn-color" href="/product/edit/{{this.id}}">Editar</a>
+                    <form action="/delete/product" method="post">
+                      <input type="hidden" name="id" value="{{this.id}}">
+                      <button class="btn-products" type="submit">
+                          Apagar
+                      </button>
+                    </form>
+                </div>
+                  <div class="btn2">
+                        <form action="/listaCompras" method="post">
+                            <input type="hidden" name="id" value="{{this.id}}">
+                            <input type="hidden" name="name" value="{{this.product}}">
+                            <input type="hidden" name="done" value="0">
+                            <button class="btn-add" type="submit">
+                                Adicionar na lista de compras
+                            </button>
+                         </form>
+                    </div>
+              
+                
+            </div>
+        {{/each}}
+    </div>    
 </main>

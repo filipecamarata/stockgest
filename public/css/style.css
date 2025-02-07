@@ -10,11 +10,14 @@
 html, body{
     width: 100%;
     height: 100vh;
-    background-color: #ecedf3;
+    background-color: #fff;
 }
 
 #container{
-    width: 100%;
+    width: 70%;
+    padding-left: 2em;
+    padding-bottom: 2.5em;
+    margin: auto;
     min-height: 100vh;   
     display: flex;
     flex: 1;
@@ -129,6 +132,12 @@ html, body{
 }
 
 /*Messages*/
+
+.alerta-mensagem{
+ background-color: #ecedf3;
+ width: 71.7%; 
+ margin: auto;
+}
 .message{
     padding: 1em;
     color:#004085;
@@ -136,10 +145,10 @@ html, body{
     border: 1px solid #b8daff;
     border-radius: 5px;
     text-align: center;
-    margin: 0 auto 2em;
-    max-width: 70%;
-
+    margin: 0 auto; 
+    max-width: 90%; 
 }
+
 
 /*Home*/
 
@@ -256,34 +265,43 @@ html, body{
 }
 
 /*Produtos*/
+
+
+.contents img{
+    width: 100%;
+}
 .titulo{
     font-size: 2em;
     margin: 1.2em;
     text-align: center;
     color: #01445f;
 }
+.h2-titulo{
+    margin: 2em 1.5em;
+}
 
 .products{
     display: grid;
     grid-template-columns: repeat(4, 1fr);    
     max-width: 1550px;  
-    gap: 20px;       
+    gap: 20px;  
+    margin-left: 2em;     
     margin:auto;
 }
 
 .contents{
-   background-color: #f2f2f2;
+   background-color: #fff;
    border-radius: 7px;
    box-shadow: 1px 2px 8px rgba(0, 0, 0, 0.205);
    padding: .8em;  
-
-
 }
+
 
 .contents:hover{
     transform: scale(1.05, 1.05);
     z-index: 2;
     transition: .35s;
+    border: 1px solid #db4c3f;
     
 }
 .contents h2{
@@ -419,14 +437,14 @@ html, body{
  border-radius: .3em;
 }
 .form-filtro select{
-    border: none;
+    border: 1px solid transparent;
     background-color: #cccccc00;
 }
 
 .form-filtro select:hover{
     background-color: #fff;
     border: 1px solid black;
-    transition: .23s;
+    transition: .33s;
 }
 
 .btn-filtro{
@@ -444,6 +462,12 @@ html, body{
     color: #db4c3f;
     background-color: #fff;
     transition: .23s;
+}
+
+.actualizacao-products{
+    font-size: 12px;
+    color: #a19d9d;
+    margin-top: 1em;
 }
 
 /*Lista de compras*/
@@ -501,6 +525,7 @@ html, body{
 
 #footer-r{
     background-color: #ccc;
+ 
     padding: 1em;
     height: 140px;    
 }

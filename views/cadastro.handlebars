@@ -2,7 +2,7 @@
    
     <form class="form-main" action="/save-product" method="post">
         <h1>Cadastro de produtos</h1>
-        {{#each identificador}}
+        {{#each id}}
         <input type="hidden" name="id" value="{{this.id}}">
         {{/each}}
         <div class="form-control">
@@ -17,11 +17,22 @@
 
          <div class="form-control">  
             <label for="categoria">Categoria do produto <span>*</span></label>
-            <select class="select-form" name="categoria" id="cteg" required>
+            <select class="select-form" name="categoria" id="categoria" required>
                 <option disabled  selected value="">Selecione a categoria do produto</option>
                 <option value="1">Alimentos</option>
                 <option value="2">Produtos de limpeza</option>
                 <option value="3">Stock</option>
+            </select>
+        </div>
+
+        <div class="form-control">  
+            <label for="imagem">Imagem do produto <span>*</span></label>
+            <select class="select-form" name="imagem" id="imagem" required>
+                <option disabled  selected value="">Selecione a imagem do produto</option>
+                {{#each source}}
+                <option value="{{this.id}}">{{this.name}}</option>
+                {{/each}}
+                            
             </select>
         </div>
         <div class="btn">
