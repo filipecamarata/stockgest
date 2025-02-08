@@ -1,25 +1,60 @@
 <main id="container">
 <h1 class="h1-home"><span class="enfase">Stockgest</span>, a sua ferramenta de gestão, para os seus <span class="enfase">produtos de casa</span></h1>
 
-        <div class="products">
-            {{#each products}}
-                <div class="contents">
-                    <h2>{{this.product}}</h2>
-                    <p class="paragrafo-products"> Quantidade disponível: <span>{{this.amount}}</span></p>
-                    <p class="paragrafo-products">Categoria: <span>{{this.category}}</span></p>
-                    <p class="actualizacao-products">Ultima actualização em {{this.updated_at}} por <strong>{{this.user}}</strong></p>
-                   <div class="btn2">
-                        <form action="/listaCompras" method="post">
-                            <input type="hidden" name="id" value="{{this.id}}">
-                            <input type="hidden" name="name" value="{{this.product}}">
-                            <input type="hidden" name="done" value="0">
-                            <button class="btn-add" type="submit">
-                                Adicionar na lista de compras
-                            </button>
-                         </form>
-                    </div>
-              
+  
+    <h2 class="h2-titulo">Produtos alimentares</h2>
+    <div class="products">
+      
+        {{#each products}}
+            <div class="contents">
+                <img src="{{this.path}}" alt="{{this.product}}">
+                <h2 class="h2-product">{{this.product}}</h2>
+                <p class="paragrafo-products"> Quantidade disponível: <span>{{this.amount}}</span></p>
+                <p class="paragrafo-products">Categoria: <span>{{this.category}}</span></p>
+                <p class="actualizacao-products">Ultima actualização em {{this.updated_at}} por <strong>{{this.user}}</strong></p>
+                                                 
+                <div class="btn2">
+                    <form action="/listaCompras" method="post">
+                        <input type="hidden" name="id" value="{{this.id}}">
+                        <input type="hidden" name="name" value="{{this.product}}">
+                        <input type="hidden" name="done" value="0">
+                        <button class="btn-add" type="submit">
+                            Adicionar na lista de compras
+                        </button>
+                    </form>
                 </div>
-            {{/each}}
-        </div>         
+              
+                
+            </div>
+        {{/each}}
+    </div>    
+      
+      <!--Produtos de limpeza-->
+
+       <h2 class="h2-titulo">Produtos de limpeza</h2>
+    <div class="products">
+      
+        {{#each products2}}
+            <div class="contents">
+                <img src="{{this.path}}" alt="{{this.product}}">
+                <h2 class="h2-product">{{this.product}}</h2>
+                <p class="paragrafo-products"> Quantidade disponível: <span>{{this.amount}}</span></p>
+                <p class="paragrafo-products">Categoria: <span>{{this.category}}</span></p>
+                <p class="actualizacao-products">Ultima actualização em {{this.updated_at}} por <strong>{{this.user}}</strong></p>
+               
+                <div class="btn2">
+                    <form action="/listaCompras" method="post">
+                        <input type="hidden" name="id" value="{{this.id}}">
+                        <input type="hidden" name="name" value="{{this.product}}">
+                        <input type="hidden" name="done" value="0">
+                        <button class="btn-add" type="submit">
+                            Adicionar na lista de compras
+                        </button>
+                    </form>
+                </div>
+              
+                
+            </div>
+        {{/each}}
+    </div>           
 </main>

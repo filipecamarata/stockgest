@@ -71,29 +71,17 @@
    width: 250px;    
 }
 
-.products{
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); 
-    gap: 10px;       
-    margin:auto;
-}
-
-
 
 /*Home*/
 
 .h1-home{
-    margin: 1.2em 1.5em 1em 1.5em;
-    font-size: 1.7em; 
+    margin: 1.3em 1em 1em 1em;
+    font-size: 1.1em; 
 }
 .h2-home{
     font-size: 1.2em;
     margin-left: 1.2em;
     margin-bottom: .6em;
-}
-
-.contents h2{
-    font-size: 1.2em;
 }
 
 
@@ -116,31 +104,63 @@
 }
 
 /*Produtos*/
+
+#container{
+    width: 100%;
+    padding-left: .4em;
+    padding-right: 1em;
+    padding-bottom: 2.5em;
+    margin: auto;
+    min-height: 100vh;   
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    background-color: #ecedf3;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+.products{
+    display: grid;
+    grid-template-columns: repeat(2, 175px);    
+    max-width: 100%;  
+    gap: 8px;  
+    margin-left: .5em;     
+    margin-right: .5em;
+    margin-top: 1em; 
+}
 .titulo{
     font-size: 1.3em;    
+}
+
+.h2-product{
+    font-size: 11px;
 }
 
 .categoria h4{
    display: none;
 }
 .contents:hover{
-    transform: scale(1.03, 1.03);
+    transform: scale(1.01, 1.01);
     z-index: 2;
     transition: .25s;
 }
 
 .contents{
-    background-color: #f2f2f2;
-    border-radius: 7px;
+    background-color: #fff;   
     box-shadow: 0px 2px 8px rgba(0, 0, 0, 0);
     padding: .8em;  
  
  }
 .contents .paragrafo-products{
-   font-size: 14px;
-    
+   font-size: 9px;   
 
 }
+
+.actualizacao-products{   
+    font-size: 8px;    
+}
+
 
 .form-filtro{
     display: flex;
@@ -149,6 +169,16 @@
     padding: .3em;
     margin-left: 1em;
 }
+.btn-produtos{   
+    margin-top: 1em;
+    margin-bottom: .8em;
+    
+}
+
+.btn2{  
+    margin-top: 0.5em;
+    margin-bottom: .3em;       
+}
 
 .btn-filtro{
     padding: .2em;
@@ -156,10 +186,7 @@
     width: 70px;
 }
 
-.btn2 .btn-add{    
-    font-size: 14px;
-    width: 205px;    
-}
+
 
 
 .btn{    
@@ -174,25 +201,91 @@
     
 }
 
+.btn-produtos .btn-products{         
+    width: 50px;
+    padding: .3em;
+    color: #fff;
+    font-size: 9px;
+    background-color: #db4c3f;
+    border-radius: 5px;
+}
+
+.btn-produtos .btn-color{
+    text-decoration: none;
+    width: 50px;      
+    text-align: center;
+    font-weight: bold;
+    padding: .3em;
+    font-size: 9px; 
+    margin-top: 3px;  
+    border-radius: 5px;   
+    
+}
+
+
+.btn2 .btn-add{      
+    width: 140px;    
+    font-weight: bold;
+    padding: .5em;
+    font-size: 8px;
+    border-radius: 5px;    
+}
+
 .btn .btn-products{    
     font-weight: bold;
     width: 80px;
     
 }
 
+.contents img{
+    width: 100%;
+    height: 130px;
+}
+
 /*Rodape*/
 #footer-r{  
-    height: 100px;
+    height: 320px;
    
 }
 
-#footer-r a{  
-    font-size: 1em;   
+#footer-r .content-footer{   
+    display: flex;  
+   flex-direction: column; 
+    margin-top: 1.4em;
 }
 
-#footer-r p{
-    margin-top: 1.9em;    
-    font-size: 13px;
+.content-itens{
+    margin-top: 1.5em;
+    }
+
+.icones-redes-sociais{
+    display: flex;
+    list-style: none;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 1.5em;
+}
+
+
+.content-footer p{
+    width: 300px;
+    text-align: center;
+    margin: auto;
+    font-size: 12px;
+    line-height: 18px; 
+}
+
+
+.contents-footer h3, 
+.content-itens h3{    
+    font-size: 1em; 
+       
+}
+
+
+.copy-p{    
+    margin-top: 1.9em;
+    font-size: 12px;
 }
 
 

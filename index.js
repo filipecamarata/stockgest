@@ -10,6 +10,7 @@ const bcrypt = require('bcryptjs')
 //Biblioteca para formatar a data
 const { format } = require('date-fns')
 const { ptBR } = require('date-fns/locale')
+const { toUnicode } = require('punycode')
 
 const app = express()
 
@@ -250,6 +251,8 @@ app.post('/save-product', checkAuth, (req, res) =>{
 app.get('/products', checkAuth, (req, res) =>{
     const message = req.flash('message')[0] || null; // Recupera a mensagem da sessão e / Pegando a primeira mensagem ou null
     //console.log('Mensagem Flash:', message); 
+    let prodAlimentos = true
+    let prodLimpeza = true
 
      //Query para selecionar apenas os produtos de alimentação
     const sqlQuery = `SELECT u.name user, p.id, p.name product,  c.name category, i.path , p.amount, p.updated_at FROM products AS p
@@ -288,7 +291,7 @@ app.get('/products', checkAuth, (req, res) =>{
 
             console.log(products)
        
-        res.render('produtos', {products, products2, message})
+        res.render('produtos', {products, products2, prodAlimentos, prodLimpeza, message})
         })
      
         
@@ -358,22 +361,42 @@ app.post('/delete/product', checkAuth, (req, res) =>{
 //Rota para filtrar produtos
 app.post('/filtro', checkAuth, (req, res) =>{
     const categoria = req.body.categoria
+    let prodAlimentos = true
+    let prodLimpeza = true
 
     if (!categoria) {
         return res.status(400).send("Categoria não fornecida");
     }
+     
+if (categoria == 1) {
+    prodAlimentos = false
+    prodLimpeza = false
+} 
+else if (categoria == 2) {
+    prodAlimentos = false
+    prodLimpeza = false
+}
 
-    const sqlQuery = `SELECT u.name user, p.id, p.name product,  c.name category , p.amount, p.updated_at FROM products AS p join category AS c
-    on c.id = p.category_id join user AS u on p.user_id = u.id
-    WHERE p.category_id = ${categoria}`
+   //Query para filtrar os produtos 
+   const sqlQuery = `SELECT u.name user, p.id, p.name product,  c.name category, i.path , p.amount, p.updated_at FROM products AS p
+   join category AS c
+   on c.id = p.category_id join user AS u on p.user_id = u.id
+   join img_source i on i.id = p.img_id WHERE category_id =${categoria}`
+   
+   conexao.query(sqlQuery, (err, data) =>{
+       if(err){
+           console.log(err)
+           return
+       }
 
-    conexao.query(sqlQuery, (err, data) =>{
-        if(err){
-            console.log(err)
-            return
-        }
-        const products = data
-        res.render('produtos', {products})
+       //Converte a data em padrão brasileiro
+       const products = data.map(result => ({
+           ...result, //Faz um copia do array principal sem modificá-lo
+           updated_at: format(new Date(result.updated_at), 'dd/MM/yyyy', { locale: ptBR })          
+
+       }))   
+        console.log(prodAlimentos, prodLimpeza)    
+        res.render('produtos', {products, prodAlimentos, prodLimpeza})
     })
 })
 
@@ -384,7 +407,7 @@ app.post('/listaCompras', checkAuth, (req, res) =>{
     const done = req.body.done
 
     //checando se o produto ja foi adicionado
-    const sqlCheck = `SELECT name prod FROM listCompras Where product_id = ${id}`
+    const sqlCheck = `SELECT name prod FROM lista_compras Where product_id = ${id}`
     conexao.query(sqlCheck, (err, data) =>{
         if(err){            
             console.log(err)
@@ -398,13 +421,13 @@ app.post('/listaCompras', checkAuth, (req, res) =>{
             return res.redirect('/listaCompras')
           
         } else{
-            const sqlQuery = `INSERT INTO listCompras (product_id, name, done) values (${id}, '${name}', ${done}) `
+            const sqlQuery = `INSERT INTO lista_compras (product_id, name, done) values (${id}, '${name}', ${done}) `
             conexao.query(sqlQuery, (err) =>{
             if(err){
                 console.log(err)            
                 return
             }
-            const sql = `SELECT product_id,  name, done FROM listCompras`
+            const sql = `SELECT product_id,  name, done FROM lista_compras`
             conexao.query(sql, (err, data) =>{
                 if(err){
                     console.log(err)
@@ -446,7 +469,7 @@ app.post('/updateStatus', checkAuth, (req, res)=>{
     const id = req.body.idp
     const done = req.body.done === '0' ? 1 : 0
        
-    const sqlQuery = `UPDATE listCompras SET done =${done} WHERE product_id = ${id}`
+    const sqlQuery = `UPDATE lista_compras SET done =${done} WHERE product_id = ${id}`
     conexao.query(sqlQuery, (err) =>{
         if(err){
             console.log(err)
@@ -462,7 +485,7 @@ app.post('/updateStatus', checkAuth, (req, res)=>{
 app.post('/removerProduto', checkAuth, (req, res) =>{
     const id = req.body.idr
 
-    const sqlQuery = `DELETE FROM listCompras WHERE product_id = ${id}`
+    const sqlQuery = `DELETE FROM lista_compras WHERE product_id = ${id}`
     conexao.query(sqlQuery, (err) =>{
         if(err){
             console.log(err)
@@ -475,23 +498,45 @@ app.post('/removerProduto', checkAuth, (req, res) =>{
 
 //Rota da Home
 app.get("/", (req, res) =>{
-    const sqlQuery = `SELECT u.name user, p.id, p.name product,  c.name category , p.amount, p.updated_at FROM products AS p join category AS c
-    on c.id = p.category_id join user AS u on p.user_id = u.id    
-    `
-  
-    conexao.query(sqlQuery, (err, data) =>{
-        if(err){
-            console.log(err)
-            return
-        }
-        const products = data                
-       // console.log(products)
-       
-        res.render('home', {products})
-        
+
+     //Query para selecionar apenas os produtos de alimentação
+     const sqlQuery = `SELECT u.name user, p.id, p.name product,  c.name category, i.path , p.amount, p.updated_at FROM products AS p
+     join category AS c
+     on c.id = p.category_id join user AS u on p.user_id = u.id
+     join img_source i on i.id = p.img_id WHERE category_id =1`
+     
+     conexao.query(sqlQuery, (err, data) =>{
+         if(err){
+             console.log(err)
+             return
+         }
+ 
+         //Converte a data em padrão brasileiro
+         const products = data.map(result => ({
+             ...result, //Faz um copia do array principal sem modificá-lo
+             updated_at: format(new Date(result.updated_at), 'dd/MM/yyyy', { locale: ptBR })          
+ 
+         }))
+ 
+         //Query para selecionar apenas os produtos de limpeza
+         const sqlQuery2 = `SELECT u.name user, p.id, p.name product,  c.name category, i.path , p.amount, p.updated_at FROM products AS p
+             join category AS c
+             on c.id = p.category_id join user AS u on p.user_id = u.id
+             join img_source i on i.id = p.img_id WHERE category_id =2`
+         conexao.query(sqlQuery2, (err, data) =>{
+             if(err){
+                 return console.log(err)
+             }
+             //Converte a data em padrão brasileiro
+             const products2 = data.map(result => ({
+                 ...result, //Faz um copia do array principal sem modificá-las
+                 updated_at: format(new Date(result.updated_at), 'dd/MM/yyyy', { locale: ptBR })          
+     
+            })) 
+             console.log(products)        
+             res.render('home', {products, products2})
+        })    
     })   
-       
-       
 })
 
 

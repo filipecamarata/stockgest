@@ -22,13 +22,16 @@
         </button>
        </form>
     </div>
-      <h2 class="h2-titulo">Produtos alimentares</h2>
+    {{#if prodAlimentos}}
+      <h2 class="h2-titulo">Produtos alimentares</h2>    
+    {{/if}}
+
     <div class="products">
       
         {{#each products}}
             <div class="contents">
                 <img src="{{this.path}}" alt="{{this.product}}">
-                <h2>{{this.product}}</h2>
+                <h2 class="h2-product">{{this.product}}</h2>
                 <p class="paragrafo-products"> Quantidade disponível: <span>{{this.amount}}</span></p>
                 <p class="paragrafo-products">Categoria: <span>{{this.category}}</span></p>
                 <p class="actualizacao-products">Ultima actualização em {{this.updated_at}} por <strong>{{this.user}}</strong></p>
@@ -58,14 +61,16 @@
     </div>    
       
       <!--Produtos de limpeza-->
-
-       <h2 class="h2-titulo">Produtos de limpeza</h2>
+     {{#if prodLimpeza}}
+     <h2 class="h2-titulo">Produtos de limpeza</h2>   
+    {{/if}}
+       
     <div class="products">
       
         {{#each products2}}
             <div class="contents">
                 <img src="{{this.path}}" alt="{{this.product}}">
-                <h2>{{this.product}}</h2>
+                <h2 class="h2-product">{{this.product}}</h2>
                 <p class="paragrafo-products"> Quantidade disponível: <span>{{this.amount}}</span></p>
                 <p class="paragrafo-products">Categoria: <span>{{this.category}}</span></p>
                 <p class="actualizacao-products">Ultima actualização em {{this.updated_at}} por <strong>{{this.user}}</strong></p>
